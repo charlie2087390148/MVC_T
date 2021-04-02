@@ -1,0 +1,63 @@
+﻿@using Newtonsoft.Json
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@{ 
+    List<MVC_T.Clase.Library> lbry = null;
+    var url = $"http://localhost:1421/api/library/";
+    var request = (HttpWebRequest)WebRequest.Create(url);
+    request.Method = "GET";
+    request.ContentType = "application/json";
+    request.Accept = "application/json";
+
+    try
+    {
+        using (WebResponse response = request.GetResponse())
+        {
+            using (Stream strReader = response.GetResponseStream())
+            {
+
+                using (StreamReader objReader = new StreamReader(strReader))
+                {
+                    string responseBody = objReader.ReadToEnd();
+
+                    lbry = JsonConvert.DeserializeObject<List<MVC_T.Clase.Library>>(responseBody);
+                }
+            }
+        }
+    }
+    catch (WebException ex)
+    {
+        // Handle error
+    }
+}
+
+<h2>Lista de Canciones</h2>
+
+<table class="table table-condensed table-hover table-responsive table-striped" >
+    <thead>
+        <tr>
+            <td>Artista</td>
+            <td>Album</td>
+            <td>Cancion</td>
+            <td>Descripcion</td>
+            <td>Foto</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in lbry)
+        {
+            <tr>
+                <td>@item.Artista1</td>
+                <td>@item.Album1</td>
+                <td>@item.Cancion1</td>
+                <td>@item.Descripcion1</td>
+                <td><img src="@item.Path_photo1" width="50px" /></td>
+            </tr>
+        }
+    </tbody>
+    
+</table>
+
